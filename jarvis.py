@@ -1,5 +1,9 @@
 import datetime as date
 from enum import Enum
+import tkinter as tk
+import tkinter.ttk  as ttk
+# import pyttsx3
+
 
 def input_validation(request: str, lowerbound =0, upperbound=0):
     """ The function gets a string input, if it's a digit in range, it returns the digit.
@@ -19,12 +23,19 @@ def input_validation(request: str, lowerbound =0, upperbound=0):
     except Exception as e:
            return -1
 
-def editFile(path):
+def editFile():
        print("Entered the function editFile")
+       path = input("please insert file path for reading, i'll read the first two lines")
+       with open(path, 'r') as input_file:
+              line1 = input_file.readline()
+              line2 = input_file.readline()
+              print("the first two lines are:", line1,line2)
+
 
 class Menu:
        def __init__(self):
               self.dict = {}
+       #dict has: key: number,value: tuple- (function description, name of function)
 
        def get_upper_bound(self):
              return len(self.dict)
@@ -83,23 +94,34 @@ class Item():
 
                
 
+window = tk.Tk()
+greeting2 = ttk.Label(text="hello2!",font= ("arial",20))
+btn1 = tk.Button(text= "click me!", width=30, height=30, fg="salmon", background="DarkKhaki",command=editFile)
+btn1.pack()
+greeting2.pack()
+window.mainloop()
 
 
-# a = Menu()
+# engine = pyttsx3.init()
+# def talk(text):
+#     engine.say(text)
+#     engine.runAndWait()
+
+# engine.say("Good morning sir.")
+# engine.runAndWait()
+# menu_object = Menu()
+# # a dictionary that maps function names is String to the refrence of the functions
 # function_dict = {
 #        "editFile":editFile,
 # }
-# a.load_options("menu_options.txt")
-# print(a)
+# menu_object.load_options("menu_options.txt")
 # print("#"*15)
-flag = -1
-while(flag == -1):
-       flag = input("please insert your choice for personal assistant ")
-# res = int(input_validation(b,0, a.get_upper_bound()))
-       flag = input_validation(flag,0, 2)
-print(flag)
-# if res != -1:
-#        a.call_function_by_name(a.dict[res][1],function_dict[a.dict[res][1]], "hi")
+# flag = -1
+# while(flag == -1):
+#        flag = input("please insert your choice for personal assistant ")
+#        flag = input_validation(flag,-1, 2)
+# print("The option specified is:",menu_object.dict[flag][0])
+# menu_object.call_function_by_name(menu_object.dict[flag][1],function_dict[menu_object.dict[flag][1]])
 
 
 
