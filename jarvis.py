@@ -98,13 +98,13 @@ class Item():
 
 #------------------------------------------#
 window = tk.Tk()
-lst = []
+# lst = []
 def changebtn():
        lst[0].config(text="x", bg="black")
-btn2 = tk.Button(text= "click me!", width=15, height=10, fg="salmon", background="DarkKhaki")
-btn1 = tk.Button(text= "click me!", width=15, height=10, fg="salmon", background="DarkKhaki")
-btn3 = tk.Button(text= "click me!", width=15, height=10, fg="tomato", background="DarkKhaki",command=changebtn)
-lst.append(btn2)
+btn2 = tk.Button(text= "click me!", width=15, height=10, fg="navy", background="deepskyblue")
+btn1 = tk.Button(text= "click me!", width=15, height=10, fg="navy", background="deepskyblue")
+btn3 = tk.Button(text= "", width=15, height=10, fg="navy", background="deepskyblue",command=changebtn)
+# lst.append(btn2)
 btn1.grid(row= 1, column=1)
 btn3.grid(row= 2, column=2)
 btn2.grid(row = 3 , column= 3)
