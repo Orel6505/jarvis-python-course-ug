@@ -4,6 +4,7 @@ from tkinter import *
 import tkinter as tk
 import tkinter.ttk  as ttk
 # import pyttsx3
+import base_tic_tac_toe as bTTT
 
 
 def input_validation(request: str, lowerbound =0, upperbound=0):
@@ -31,6 +32,12 @@ def editFile():
               line1 = input_file.readline()
               line2 = input_file.readline()
               print("the first two lines are:", line1,line2)
+
+def start_a_game():
+       bTTT.TTT().mainloop()
+
+def open_to_do_list():
+       pass
 
 
 class Menu:
@@ -97,20 +104,7 @@ class Item():
 
 
 #------------------------------------------#
-window = tk.Tk()
-# lst = []
-def changebtn():
-       lst[0].config(text="x", bg="black")
-btn2 = tk.Button(text= "click me!", width=15, height=10, fg="navy", background="deepskyblue")
-btn1 = tk.Button(text= "click me!", width=15, height=10, fg="navy", background="deepskyblue")
-btn3 = tk.Button(text= "", width=15, height=10, fg="navy", background="deepskyblue",command=changebtn)
-# lst.append(btn2)
-btn1.grid(row= 1, column=1)
-btn3.grid(row= 2, column=2)
-btn2.grid(row = 3 , column= 3)
 
-
-window.mainloop()
 
 #------------------------------------------#
 
@@ -121,19 +115,22 @@ window.mainloop()
 
 # engine.say("Good morning sir.")
 # engine.runAndWait()
-# menu_object = Menu()
+menu_object = Menu()
 # # a dictionary that maps function names is String to the refrence of the functions
-# function_dict = {
-#        "editFile":editFile,
-# }
-# menu_object.load_options("menu_options.txt")
-# print("#"*15)
-# flag = -1
-# while(flag == -1):
-#        flag = input("please insert your choice for personal assistant ")
-#        flag = input_validation(flag,-1, 2)
-# print("The option specified is:",menu_object.dict[flag][0])
-# menu_object.call_function_by_name(menu_object.dict[flag][1],function_dict[menu_object.dict[flag][1]])
+function_dict = {
+       "editFile":editFile,
+       "open_to_do_list": open_to_do_list,
+       "start_a_game": start_a_game,
+}
+menu_object.load_options("menu_options.txt")
+print("#"*15)
+flag = -1
+while(flag == -1):
+       flag = input("please insert your choice for personal assistant ")
+       upper_bound = len(list(menu_object.dict.keys()))
+       flag = input_validation(flag,-1, upper_bound)
+print("The option specified is:",menu_object.dict[flag][0])
+menu_object.call_function_by_name(menu_object.dict[flag][1],function_dict[menu_object.dict[flag][1]])
 
 
 

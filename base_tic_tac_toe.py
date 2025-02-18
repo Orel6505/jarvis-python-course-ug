@@ -1,29 +1,45 @@
-# ------------------------------------------#
-# example code - base
+
 import tkinter as tk
 
 class TTT(tk.Tk):
+	
 	def __init__(self):
 		super().__init__()
 		self.title("Tic Tao Toe")
 		self.btns = []
-		self.turn = True
+		self.turn = True #always starts with "X",= True
 		self.count = 0
 		self.resizable(False, False)
 		self.Start()
-
+		 
 	def Start(self):
 		for i in range(0, 3):
 			row = []
 			for j in range(0, 3):
-				btn = tk.Button(height=20, width=20, bg="",fg="", text="", command="")
-				pass
-				
+				btn = tk.Button(height=10, width=10,font= ("oldtimesroman",16) ,bg="#33ffa8",fg="#000000", command= lambda x = i, y = j : self.clicked(x,y))
+				row.append(btn)
+				btn.grid(row= i, column=j)
+			self.btns.append(row)	
 		tk.Button(self, text="Restart", bg='blue', fg='white', activebackground='blue3', activeforeground='white', command=self.Restart).grid(row=3, column=1)
 
-	def clicked(self, x, y):
-		pass
-		
+	def clicked(self, x,y):
+		char = "X"
+		if self.turn:
+			self.btns[x][y]["text"] ="X"
+			char = "X"
+		else:
+			self.btns[x][y]["text"] ="O"
+			char = "O"
+		self.btns[x][y].config(state=tk.DISABLED)
+		self.turn = not self.turn
+		self.count += 1
+		self.checkWinner(char)
+		# if not self.Winner()
+			
+	
+
+
+
 
 	def checkWinner(self, char): # Can be improved
 			#horizontal
@@ -40,6 +56,8 @@ class TTT(tk.Tk):
 			self.Winner(char)
 		elif self.count == 9:
 			self.Winner("DRAW")
+
+
 
 	def Winner(self, char):
 		top = tk.Toplevel(self)
@@ -62,5 +80,5 @@ class TTT(tk.Tk):
 		self.Start()
 
 
-
-
+T = TTT()
+T.mainloop()
