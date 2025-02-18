@@ -1,5 +1,6 @@
 import datetime as date
 from enum import Enum
+from tkinter import *
 import tkinter as tk
 import tkinter.ttk  as ttk
 # import pyttsx3
@@ -94,13 +95,24 @@ class Item():
 
                
 
+
+#------------------------------------------#
 window = tk.Tk()
-greeting2 = ttk.Label(text="hello2!",font= ("arial",20))
-btn1 = tk.Button(text= "click me!", width=30, height=30, fg="salmon", background="DarkKhaki",command=editFile)
-btn1.pack()
-greeting2.pack()
+lst = []
+def changebtn():
+       lst[0].config(text="x", bg="black")
+btn2 = tk.Button(text= "click me!", width=15, height=10, fg="salmon", background="DarkKhaki")
+btn1 = tk.Button(text= "click me!", width=15, height=10, fg="salmon", background="DarkKhaki")
+btn3 = tk.Button(text= "click me!", width=15, height=10, fg="tomato", background="DarkKhaki",command=changebtn)
+lst.append(btn2)
+btn1.grid(row= 1, column=1)
+btn3.grid(row= 2, column=2)
+btn2.grid(row = 3 , column= 3)
+
+
 window.mainloop()
 
+#------------------------------------------#
 
 # engine = pyttsx3.init()
 # def talk(text):
