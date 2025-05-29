@@ -1,141 +1,164 @@
-import datetime as date
+import datetime as dt
 from enum import Enum
-from tkinter import *
+import pyttsx3
 import tkinter as tk
-import tkinter.ttk  as ttk
+from tkinter import ttk
+import pywhatkit
 # import pyttsx3
 import base_tic_tac_toe as bTTT
 
+def input_validation(request: str, lowerbound=0, upperbound=0) -> int:
+    """
+    Validates that the request is a digit and within (lowerbound, upperbound).
+    Returns the digit if valid, -1 if the user wants to exit, otherwise -2 for error.
+    """
+    request = request.strip()
+    if request == "-1":
+        return -1  # Explicit request to exit
 
-def input_validation(request: str, lowerbound =0, upperbound=0):
-    """ The function gets a string input, if it's a digit in range, it returns the digit.
-    otherwise, if it's digit but it's not in range or a non digit string it will return -1. """
+    if not request.isdigit():
+        print("Invalid input.")
+        return -2
+
+    value = int(request)
+    if lowerbound < value < upperbound:
+        return value
+    else:
+        print("The number specified is not in range.")
+        return -2
+ 
+def edit_file():
+    print("Entered the function edit_file")
+    path = input("Please insert file path for reading. I'll read the first two lines: ")
     try:
-        if(request.isdigit()):
-                request = int(request)
-                if request < upperbound and request  > lowerbound :
-                       return request
-                else:
-                       print("The number specified specified is not in range.")
-                       return -1
-        else:
-              print("Invalid input.")
-              return -1               
-                
+        with open(path, 'r') as input_file:
+            line1 = input_file.readline()
+            line2 = input_file.readline()
+            print("The first two lines are:", line1, line2)
     except Exception as e:
-           return -1
-
-def editFile():
-       print("Entered the function editFile")
-       path = input("please insert file path for reading, i'll read the first two lines")
-       with open(path, 'r') as input_file:
-              line1 = input_file.readline()
-              line2 = input_file.readline()
-              print("the first two lines are:", line1,line2)
+        print(f"Failed to read file: {e}")
 
 def start_a_game():
-       bTTT.TTT().mainloop()
+    bTTT.TTT().mainloop()
 
 def open_to_do_list():
-       pass
-
+    print("To-do list function is not implemented yet.")
 
 class Menu:
-       def __init__(self):
-              self.dict = {}
-       #dict has: key: number,value: tuple- (function description, name of function)
+    def __init__(self):
+        # dict: key=int option num, value=(description, func_name)
+        self.options = {}
 
-       def get_upper_bound(self):
-             return len(self.dict)
-              
+    def get_upper_bound(self):
+        return len(self.options)
 
-       def call_function_by_name(self,func_name,func_ref, *args, **kwargs):
-              if func_name :
-                     return func_ref(*args, **kwargs)  # Pass arguments dynamically
-              else:
-                     raise ValueError(f"Function '{func_name}' is not defined.")
+    def call_function_by_name(self, func_name: str, func_ref, *args, **kwargs):
+        if func_name:
+            return func_ref(*args, **kwargs)
+        raise ValueError(f"Function '{func_name}' is not defined.")
 
-       
-       def load_options(self, path_name):
-              with open(path_name, 'r') as input_file:
-                     line_index = 0
-                     while(True): 
-                            line = input_file.readline()
-                            if not line:
-                                break
-                            result = [item.strip() for item in line.split(".") if item.strip()]
-                            self.dict[line_index] = (result[0],result[1])
-                            line_index+=1             
-              
-       def __str__(self):
-              return str(self.dict)
-              
-                     
+    def load_options(self, path_name):
+        try:
+            with open(path_name, 'r') as input_file:
+                for idx, line in enumerate(input_file):
+                    result = [item.strip() for item in line.split(".") if item.strip()]
+                    if len(result) >= 2:
+                        self.options[idx] = (result[0], result[1])
+        except Exception as e:
+            print(f"Failed to load options from {path_name}: {e}")
+
+    def __str__(self):
+        return str(self.options)
+
 class Priority(Enum):
-       LOW = 0
-       MED = 1
-       HIGH = 2
+    LOW = 0
+    MED = 1
+    HIGH = 2
 
 class Status(Enum):
-       START = 0
-       IN_PROGRESS = 1
-       DONE = 2
+    START = 0
+    IN_PROGRESS = 1
+    DONE = 2
 
-class Item():
-       # creation_date = date.today()
-       __title = "empty"
-       __status = Status.START
-       __priority = Priority.LOW
-       __due_date = ""
-       __notes = ""
+class Item:
+    def __init__(self):
+        self.title = "empty"
+        self.status = Status.START
+        self.priority = Priority.LOW
+        self.due_date = ""
+        self.notes = ""
+        print("Item has been created")
+
+    def modify_title(self, title: str):
+        if title:
+            self.title = title
+
+    def modify_notes(self, notes: str):
+        if notes:
+            self.notes = notes
+
+# Initialize the text-to-speech engine
+engine = pyttsx3.init()
+
+def talk(text: str) -> None:
+    """Speak the provided text using TTS."""
+    engine.say(text)
+    engine.runAndWait()
+    
+def ttsx_stop():
+       if engine:
+              engine.stop()
+              engine = None
+              print("Text-to-speech engine stopped.")
+       else:
+              print("Text-to-speech engine is not running.")
+
+def run_menu(menu_object, function_dict):
+    """
+    Runs the assistant's main menu loop.
+    Prompts the user for choices, validates input, and executes the selected option.
+    """
+    upper_bound = menu_object.get_upper_bound()
+    talk("Welcome to your personal assistant. Please choose an option from the menu.")
+
+    while True:
+        user_input = input("Please insert your choice for personal assistant: ")
+        flag = input_validation(user_input, upperbound=upper_bound)
+
+        if flag == -1:
+            print("Exiting Personal Assistant. Goodbye!")
+            talk("Exiting Personal Assistant. Goodbye!")
+            ttsx_stop()
+            break
+
+        if flag == -2:
+            print("Invalid input. Please try again.")
+            continue
+
+        try:
+            description, func_name = menu_object.options[flag]
+        except Exception as e:
+            print("Invalid choice. Please try again.")
+            continue
+
+        print("The option specified is:", description)
+        func_ref = function_dict.get(func_name)
+        if func_ref:
+            menu_object.call_function_by_name(func_name, func_ref)
+        else:
+            print(f"No function mapped for '{func_name}'.")
        
-       def __init__(self):
-              return "Item has been created"
-       def modify_title(self,str):
-              if str:
-                     self.__title = str
 
-
-       def modify_notes(self, str):
-              if str:
-                     self.__notes = str
-
-               
-
-
-#------------------------------------------#
-
-
-#------------------------------------------#
-
-# engine = pyttsx3.init()
-# def talk(text):
-#     engine.say(text)
-#     engine.runAndWait()
-
-# engine.say("Good morning sir.")
-# engine.runAndWait()
-menu_object = Menu()
-# # a dictionary that maps function names is String to the refrence of the functions
-function_dict = {
-       "editFile":editFile,
-       "open_to_do_list": open_to_do_list,
-       "start_a_game": start_a_game,
-}
-menu_object.load_options("menu_options.txt")
-print("#"*15)
-flag = -1
-while(flag == -1):
-       flag = input("please insert your choice for personal assistant ")
-       upper_bound = len(list(menu_object.dict.keys()))
-       flag = input_validation(flag,-1, upper_bound)
-print("The option specified is:",menu_object.dict[flag][0])
-menu_object.call_function_by_name(menu_object.dict[flag][1],function_dict[menu_object.dict[flag][1]])
-
-
-
-
-
-     
+def main():
+    menu_object = Menu()
+    function_dict = {
+        "editFile": edit_file,
+        "open_to_do_list": open_to_do_list,
+        "start_a_game": start_a_game,
+    }
+    menu_object.load_options("menu_options.txt")
+    run_menu(menu_object, function_dict)
     
-    
+
+if __name__ == "__main__":
+    main()
