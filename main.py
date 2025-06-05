@@ -17,7 +17,6 @@ def jarvis_greeting():
         greeting = "Good evening sir"
     else:
         greeting = "Good night sir"
-    print(greeting)
     talk(greeting)
     
 def run_menu(menu_object, function_dict):
@@ -33,13 +32,12 @@ def run_menu(menu_object, function_dict):
         flag = input_validation(user_input, upperbound=upper_bound)
 
         if flag == -1:
-            print("Exiting Personal Assistant. Goodbye!")
             talk("Exiting Personal Assistant. Goodbye!")
             ttsx_stop()
             break
 
         if flag == -2:
-            print("Invalid input. Please try again.")
+            talk("Invalid input. Please try again.")
             continue
 
         try:

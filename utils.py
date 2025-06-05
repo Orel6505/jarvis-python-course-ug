@@ -25,6 +25,7 @@ def input_validation(request: str, lowerbound=0, upperbound=0) -> int:
 
 def talk(text: str) -> None:
     """Speak the provided text using TTS."""
+    print(text)
     engine.say(text)
     engine.runAndWait()
 
